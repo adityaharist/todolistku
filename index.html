@@ -4,8 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To do list ku | ARI</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="icon" href="/img/test.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/test.png">
+    <style>
+      .completed {text-decoration: line-through;}
+    </style>
   </head>
   <body>
 
@@ -18,19 +21,18 @@
         </div>
         <ul>
           <li v-for="todo in todos"> <!-- Gunakan untuk menampilkan semua data array todo -->
-            {{ todo.name }} <!-- yang diambil hanya namanya saja dari todo  -->
-            <a href="#" class="label label-danger" v-on:click="removeTodo($index)">&times;</a>
+            <!-- {{ todo.name }} yang diambil hanya namanya saja dari todo  -->
+            <mark v-bind:class="{'completed': todo.is_completed}">{{ todo.name }}</mark>
+            <a href="#" class="badge badge-danger" v-on:click="removeTodo($index)">&times;</a>
             <!-- <button class="label label-danger" type="button" name="button" @click="removeTodo(index)">&times;</button> -->
-          </li>
-          <li v-if="!todos.length"> <!-- Gunakan ketika tidak ada data todos -->
-            <code>Todos masih kosong..</code>
+            <a href="#" class="badge badge-success" v-on:click="toggle(todo)">Done</a>
           </li>
         </ul>
       </div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0/dist/vue.js"></script>
 
     <!-- buat aplikasi dengan vuejs, harus memakai vuejs untuk memanipulasi data -->
@@ -47,14 +49,19 @@
             var newItem = this.newTodo;
             if(newItem != ''){ //mksdnya, jika ada datanya dari inputan user
               // kita akan push nilainya ke property todos.
-              this.todos.push({name: this.newTodo});
+              this.todos.push({name: this.newTodo, is_completed: false});
               this.newTodo = "";
             }
           },
-          removeTodo(index){
+          removeTodo: function(index){
             // menghapus todos
             this.todos.splice(index, 1);
             // this.$delete(this.todos, index);
+          },
+          toggle: function(todo){
+            // todo.is_completed = true;
+            // console.log(todo.is_completed);
+            todo.is_completed = !todo.is_completed;
           },
         },
       });
