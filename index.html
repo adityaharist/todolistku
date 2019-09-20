@@ -3,71 +3,68 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To do list ku | ARI</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="icon" type="image/png" sizes="32x32" href="/img/test.png">
+    <title>Todolist App | Ari</title> <!-- Judul yang tampil pada website -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> <!-- menggunakan fw bootstrap agar tampilan lebih responsive -->
+    <link rel="icon" type="image/png" sizes="32x32" href="img/test.png">
     <style>
+      body {margin: 5%;}
       .completed {text-decoration: line-through;}
     </style>
   </head>
   <body>
 
-    <div class="container" id="app">
-      <!-- agar object Vue dapat terhubung dg DOM -->
-      <div class="col-md-3">
-        <h4>Todo<strong>List</strong></h4>
-        <div class="form-group">
-          <input type="text" name="masukkan" placeholder="New Todos..." v-model="newTodo" v-on:keyup.enter="addTodo">
-        </div>
-        <ul>
-          <li v-for="todo in todos"> <!-- Gunakan untuk menampilkan semua data array todo -->
-            <!-- {{ todo.name }} yang diambil hanya namanya saja dari todo  -->
-            <mark v-bind:class="{'completed': todo.is_completed}">{{ todo.name }}</mark>
-            <a href="#" class="badge badge-danger" v-on:click="removeTodo($index)">&times;</a>
-            <!-- <button class="label label-danger" type="button" name="button" @click="removeTodo(index)">&times;</button> -->
-            <a href="#" class="badge badge-success" v-on:click="toggle(todo)">Done</a>
-          </li>
-        </ul>
+    <div class="container" id="app"> <!-- class yg tersedia pada bootstrap, agar terhubung antara objek vue dengan DOM kita beri atribut id dengan valuenya app  -->
+      <h4>Todo <strong>List</strong> </h4>
+      <!-- membuat inputan user untuk bisa ditambahkan pada data di vuenya -->
+      <div class="form-group">
+        <input type="text" placeholder="Todos Baru..." v-model="newTodo" v-on:keyup.enter="addTodo" />
       </div>
+      <ul>
+         <!-- Akan tampil ketika panjang dari todos lebih dari 0 atau lebih tepatnya ada nilainya -->
+         <li v-if="!todos.length"><code>Belum ada tugas cuy..</code></li>
+         <li v-for="todo, index in todos">
+           <mark v-bind:class="{'completed': todo.is_completed}"> {{ todo.text }} </mark> <!-- handlebars untuk menampilkan data dari Array Objects, dipanggil satu persatu karena menggunakan directive v-for -->
+           <a href="#" class="badge badge-danger" v-on:click="removeTodo(index)"> &times; </a>
+           <a href="#" class="badge badge-success" v-on:click="toggle(todo)"> Done </a>
+         </li>
+      </ul>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0/dist/vue.js"></script>
 
-    <!-- buat aplikasi dengan vuejs, harus memakai vuejs untuk memanipulasi data -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script> <!-- gunakan fw vue untuk pemrosesan pada layer frontend -->
     <script type="text/javascript">
       new Vue({
-        el:"#app",
+        el: "#app", //data yang dibutuhkan, untuk koneksi dengan DOM html
         data: {
-          todos: [], //property dimana merupakan kumpulan tempat menyimpan segala data todos dari user
-          is_completed: false,
-          newTodo: "", //kaitannya dg inputan user
+          todos : [], //daftar list todonya sbg Array Object terdiri dari key dan value
+          is_completed : false, //tipe boolean bertujuan untuk todolist yang sudah selesai akan bernilai true
+          newTodo: "" //property tini bernilai kosong berguna ketika user menginputkan data melalui form
         },
-        methods: { //gunakan methods agar mudah dipanggil, gunanya untuk menambah todo
-          addTodo: function(){
-            var newItem = this.newTodo;
-            if(newItem != ''){ //mksdnya, jika ada datanya dari inputan user
-              // kita akan push nilainya ke property todos.
-              this.todos.push({name: this.newTodo, is_completed: false});
-              this.newTodo = "";
-            }
+        // sekarang pembuatan method yang ada pada vuejs yaitu addTodo
+        methods: {
+          addTodo: function(){ //fungsi untuk menambahkan data, kita gunakan kaidah penulisan kode javascript
+            var newItem = this.newTodo; // lakukan validasi terlebih dahulu dengan membuat variabel newItem dari inputan user
+            if(newItem != ''){
+              this.todos.push({text: newItem, is_completed: false}); //akses property gunakan keyword this diikuti dengan nama property yaitu todos (array objectnya), masukkan parameternya berupa nama keynya adalah text dan valuenya berupa inputan dari user. Ingat newTodo adalah v-model dari inputan user
+              this.newTodo = '';
+            } // validasi, yaitu jangan sampai datanya kosong bisa ditambahkan ke objek vue
           },
           removeTodo: function(index){
-            // menghapus todos
             this.todos.splice(index, 1);
-            // this.$delete(this.todos, index);
+          },
+          remove: function(index){
+            this.todos.$delete(this.todos, index); //artinya adalah menghapus hanya 1 item yang indexnya terpilih. metode splice ini adalah metode js untuk menghapus nilai index array objectnya
           },
           toggle: function(todo){
-            // todo.is_completed = true;
-            // console.log(todo.is_completed);
+            //todo.is_completed = true; //awalnya false berubah menjadi true secara terus menerus
             todo.is_completed = !todo.is_completed;
-          },
+            console.log(todo.is_completed);
+          }
         },
       });
     </script>
-
+    <!-- saatnya menggunakan vuejs *diatas -->
   </body>
 </html>
 
-<!-- https://www.dumetschool.com/blog/cara-membuat-aplikasi-todolist-vue-js-part-[1-10] -->
+<!-- referensi: https://www.dumetschool.com/blog/cara-membuat-aplikasi-todolist-vue-js-part-[1-10] -->
