@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do list ku | ARI</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="icon" href="/img/test.png">
+  </head>
+  <body>
+
+    <div class="container" id="app">
+      <!-- agar object Vue dapat terhubung dg DOM -->
+      <div class="col-md-3">
+        <h4>Todo<strong>List</strong></h4>
+        <div class="form-group">
+          <input type="text" name="masukkan" placeholder="New Todos..." v-model="newTodo" v-on:keyup.enter="addTodo">
+        </div>
+        <ul>
+          <li v-for="todo in todos"> <!-- Gunakan untuk menampilkan semua data array todo -->
+            {{ todo.name }} <!-- yang diambil hanya namanya saja dari todo  -->
+            <a href="#" class="label label-danger" v-on:click="removeTodo($index)">&times;</a>
+            <!-- <button class="label label-danger" type="button" name="button" @click="removeTodo(index)">&times;</button> -->
+          </li>
+          <li v-if="!todos.length"> <!-- Gunakan ketika tidak ada data todos -->
+            <code>Todos masih kosong..</code>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0/dist/vue.js"></script>
+
+    <!-- buat aplikasi dengan vuejs, harus memakai vuejs untuk memanipulasi data -->
+    <script type="text/javascript">
+      new Vue({
+        el:"#app",
+        data: {
+          todos: [], //property dimana merupakan kumpulan tempat menyimpan segala data todos dari user
+          is_completed: false,
+          newTodo: "", //kaitannya dg inputan user
+        },
+        methods: { //gunakan methods agar mudah dipanggil, gunanya untuk menambah todo
+          addTodo: function(){
+            var newItem = this.newTodo;
+            if(newItem != ''){ //mksdnya, jika ada datanya dari inputan user
+              // kita akan push nilainya ke property todos.
+              this.todos.push({name: this.newTodo});
+              this.newTodo = "";
+            }
+          },
+          removeTodo(index){
+            // menghapus todos
+            this.todos.splice(index, 1);
+            // this.$delete(this.todos, index);
+          },
+        },
+      });
+    </script>
+
+  </body>
+</html>
+
+<!-- https://www.dumetschool.com/blog/cara-membuat-aplikasi-todolist-vue-js-part-[1-10] -->
