@@ -32,25 +32,28 @@
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script> <!-- gunakan fw vue untuk pemrosesan pada layer frontend -->
+
     <script type="text/javascript">
       new Vue({
         el: "#app", //data yang dibutuhkan, untuk koneksi dengan DOM html
         data: {
           todos : [], //daftar list todonya sbg Array Object terdiri dari key dan value
-          is_completed : false, //tipe boolean bertujuan untuk todolist yang sudah selesai akan bernilai true
-          newTodo: "" //property tini bernilai kosong berguna ketika user menginputkan data melalui form
+          //is_completed : false, tipe boolean bertujuan untuk todolist yang sudah selesai akan bernilai true
+          newTodo: null //property tini bernilai kosong berguna ketika user menginputkan data melalui form
         },
         // sekarang pembuatan method yang ada pada vuejs yaitu addTodo
         methods: {
           addTodo: function(){ //fungsi untuk menambahkan data, kita gunakan kaidah penulisan kode javascript
-            var newItem = this.newTodo; // lakukan validasi terlebih dahulu dengan membuat variabel newItem dari inputan user
-            if(newItem != ''){
+            var newItem = this.newTodo.trim(); // lakukan validasi terlebih dahulu dengan membuat variabel newItem dari inputan user
+            if(newItem){
               this.todos.push({text: newItem, is_completed: false}); //akses property gunakan keyword this diikuti dengan nama property yaitu todos (array objectnya), masukkan parameternya berupa nama keynya adalah text dan valuenya berupa inputan dari user. Ingat newTodo adalah v-model dari inputan user
-              this.newTodo = '';
+              this.newTodo = "";
+              localStorage.setItem("lists", JSON.stringify(this.todos));
             } // validasi, yaitu jangan sampai datanya kosong bisa ditambahkan ke objek vue
           },
           removeTodo: function(index){
             this.todos.splice(index, 1);
+            localStorage.removeItem("lists", JSON.stringify(this.todos));
           },
           remove: function(index){
             this.todos.$delete(this.todos, index); //artinya adalah menghapus hanya 1 item yang indexnya terpilih. metode splice ini adalah metode js untuk menghapus nilai index array objectnya
@@ -58,9 +61,18 @@
           toggle: function(todo){
             //todo.is_completed = true; //awalnya false berubah menjadi true secara terus menerus
             todo.is_completed = !todo.is_completed;
-            console.log(todo.is_completed);
-          }
+            // console.log(todo.is_completed);
+          },
         },
+        mounted : function() {
+          if (localStorage.getItem("lists")) {
+            try {
+              this.todos = JSON.parse(localStorage.getItem("lists"));
+            } catch (e) {
+              localStorage.removeItem("lists");
+            }
+          }
+        }
       });
     </script>
     <!-- saatnya menggunakan vuejs *diatas -->
@@ -68,3 +80,4 @@
 </html>
 
 <!-- referensi: https://www.dumetschool.com/blog/cara-membuat-aplikasi-todolist-vue-js-part-[1-10] -->
+<!-- Penting: https://www.dumetschool.com/blog/cara-membuat-aplikasi-todolist-vue-js-part-6 -->
