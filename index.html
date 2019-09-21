@@ -61,6 +61,7 @@
           toggle: function(todo){
             //todo.is_completed = true; //awalnya false berubah menjadi true secara terus menerus
             todo.is_completed = !todo.is_completed;
+            localStorage.setItem("lists", JSON.stringify(this.todos));
             // console.log(todo.is_completed);
           },
         },
