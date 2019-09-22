@@ -10,6 +10,11 @@
       body {margin: 5%;}
       .completed {text-decoration: line-through;}
     </style>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#todo_baru').focus();
+      });
+    </script>
   </head>
   <body>
 
@@ -17,7 +22,7 @@
       <h4>Todo <strong>List</strong> </h4>
       <!-- membuat inputan user untuk bisa ditambahkan pada data di vuenya -->
       <div class="form-group">
-        <input type="text" placeholder="Todo Baru..." v-model="newTodo" v-on:keyup.enter="addTodo" />
+        <input id="todo_baru" type="text" placeholder="Todo Baru..." v-model="newTodo" v-on:keyup.enter="addTodo" />
       </div>
       <ul>
          <!-- Akan tampil ketika panjang dari todos lebih dari 0 atau lebih tepatnya ada nilainya -->
